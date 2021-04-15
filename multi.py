@@ -9,7 +9,7 @@ import sys
 global Args
 
 def thread_function(line):
-    os.system("/usr/bin/smuggler -x -c "+Args.config+" -u "+line.replace("\n",""))
+    os.system("smuggler -x -c "+Args.config+" -u "+line.replace("\n",""))
 
 if __name__ == "__main__":
 
