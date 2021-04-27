@@ -7,14 +7,14 @@ import sys
 global Args
 
 def thread_function(line):
-    os.system(Args.bin+ " -q -x -c "+Args.config+" -u "+line.replace("\n",""))
+    os.system(Args.bin+" "+Args.cli+"  "+line.replace("\n",""))
 
 if __name__ == "__main__":
 
     Parser = argparse.ArgumentParser()
     Parser.add_argument('-l', '--list', help="URL Lists")
     Parser.add_argument('-w', '--worker', default=5.0, help="Workers. Default: 5")
-    Parser.add_argument('-c', '--config', default="default.py", help="Filepath to the configuration file of payloads")
+    Parser.add_argument('-c', '--cli', default="default.py", help="Filepath to the configuration file of payloads")
     Parser.add_argument('-b', '--bin', default="smuggler", help="Filepath to the configuration file of payloads")
     Args = Parser.parse_args()
 #    global Args
