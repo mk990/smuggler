@@ -449,6 +449,7 @@ if __name__ == "__main__":
 		httpversion = Args.httpversion
 		print_info("URL        : %s"%(Fore.CYAN + server[0]), FileHandle)
 		print_info("Method     : %s"%(Fore.CYAN + method), FileHandle)
+		print_info("Version    : %s"%(Fore.CYAN + httpversion), FileHandle)
 		print_info("Endpoint   : %s"%(Fore.CYAN + endpoint), FileHandle)
 		print_info("Configfile : %s"%(Fore.CYAN + configfile), FileHandle)
 		print_info("Timeout    : %s"%(Fore.CYAN + str(float(Args.timeout)) + Fore.MAGENTA + " seconds"), FileHandle)
