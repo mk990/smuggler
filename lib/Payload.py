@@ -35,6 +35,7 @@ class Payload():
 		self.method = "GET"
 		self.endpoint = "/"
 		self.host = host
+		self.httpversion = "1.1"
 		self.cl = -1
 
 	def __str__(self):
@@ -60,6 +61,7 @@ class Payload():
 		result = re.sub("__METHOD__",self.method,result)
 		result = re.sub("__ENDPOINT__",self.endpoint,result)
 		result = re.sub("__HOST__",self.host,result)
+		result = re.sub("__HTTP_VERSION__",self.httpversion,result)
 			
 		return (result)
 		
