@@ -163,7 +163,7 @@ class Desyncr():
 			te_payload.host = self._vhost
 		te_payload.method = self._method
 		te_payload.endpoint = self._endpoint
-		
+		te_payload.httpversion = self._httpversion
 		if len(self._cookies) > 0:
 			te_payload.header += "Cookie: " + ''.join(self._cookies) + "\r\n"
 		
@@ -185,7 +185,7 @@ class Desyncr():
 			te_payload.host = self._vhost
 		te_payload.method = self._method
 		te_payload.endpoint = self._endpoint
-		
+		te_payload.httpversion = self._httpversion
 		if len(self._cookies) > 0:
 			te_payload.header += "Cookie: " + ''.join(self._cookies) + "\r\n"
 			
@@ -256,7 +256,7 @@ class Desyncr():
 					pretty_print(name, dismsg)
 					
 					# Write payload out to file
-					write_payload(self._host, clte_res[2], "CLTE")
+					write_payload(self._host, clte_res[2], "CLTE"+self._httpversion)
 					self._attempts = 0
 					return True
 
@@ -280,7 +280,7 @@ class Desyncr():
 					pretty_print(name, dismsg)
 					
 					# Write payload out to file
-					write_payload(self._host, tecl_res[2], "TECL")
+					write_payload(self._host, tecl_res[2], "TECL"+self._httpversion)
 					self._attempts = 0
 					return True
 			else:
