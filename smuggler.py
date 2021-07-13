@@ -37,11 +37,12 @@ from lib.EasySSL import EasySSL
 from lib.colorama import Fore, Style
 
 class Desyncr():
-	def __init__(self, configfile, smhost, smport=443, url="", method="POST", endpoint="/",  SSLFlag=False, logh=None, smargs=None):
+	def __init__(self, configfile, smhost, smport=443, url="", method="POST", httpversion="1.1" ,endpoint="/",  SSLFlag=False, logh=None, smargs=None):
 		self._configfile = configfile
 		self._host = smhost
 		self._port = smport
 		self._method = method
+		self._httpversion= httpversion
 		self._endpoint = endpoint
 		self._vhost = smargs.vhost
 		self._url = url
@@ -95,7 +96,7 @@ class Desyncr():
 			p.host = self._host
 			p.method = "GET"
 			p.endpoint = self._endpoint
-			p.header  = "__METHOD__ __ENDPOINT__?cb=__RANDOM__ HTTP/1.1" + RN
+			p.header  = "__METHOD__ __ENDPOINT__?cb=__RANDOM__ HTTP/__HTTP_VERSION__" + RN
 			p.header += "Host: __HOST__" + RN
 			p.header += "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.87 Safari/537.36" + RN
 			p.header += "Content-type: application/x-www-form-urlencoded; charset=UTF-8" + RN
@@ -390,6 +391,7 @@ if __name__ == "__main__":
 	Parser.add_argument('-t', '--timeout', default=5.0, help="Socket timeout value Default: 5")
 	Parser.add_argument('--no-color', action='store_true', help="Suppress color codes")
 	Parser.add_argument('-c', '--configfile', default="default.py", help="Filepath to the configuration file of payloads")
+	Parser.add_argument('-p','--httpversion', default="1.1", help="Version http to request")
 	Args = Parser.parse_args()  # returns data from the options specified (echo)
 
 	NOCOLOR = Args.no_color
@@ -444,14 +446,14 @@ if __name__ == "__main__":
 		endpoint = params[2]
 		SSLFlagval = params[3]
 		configfile = Args.configfile
-
+		httpversion = Args.httpversion
 		print_info("URL        : %s"%(Fore.CYAN + server[0]), FileHandle)
 		print_info("Method     : %s"%(Fore.CYAN + method), FileHandle)
 		print_info("Endpoint   : %s"%(Fore.CYAN + endpoint), FileHandle)
 		print_info("Configfile : %s"%(Fore.CYAN + configfile), FileHandle)
 		print_info("Timeout    : %s"%(Fore.CYAN + str(float(Args.timeout)) + Fore.MAGENTA + " seconds"), FileHandle)
 
-		sm = Desyncr(configfile, host, port, url=server[0], method=method, endpoint=endpoint, SSLFlag=SSLFlagval, logh=FileHandle, smargs=Args)
+		sm = Desyncr(configfile, host, port, url=server[0], method=method, httpversion=httpversion ,endpoint=endpoint, SSLFlag=SSLFlagval, logh=FileHandle, smargs=Args)
 		sm.run()
 
 
