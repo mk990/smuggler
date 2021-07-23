@@ -332,7 +332,7 @@ class Desyncr():
 			if "Content-Length: 11" in str(payload) or "Content-Length: 5" in str(payload):
 				smuggled=0
 			if res is not None :
-				print(str(payload),str(smuggled),res,"SIZE:"+str(len(res))+"\r\n\r\n")
+				print(str(smuggled),res[0:40],"LEN:"+str(len(res))+"\r\n\r\n")
 #				output_file="/var/www/html/"+self._host+"_"+str(self._port)+"/"+self._host+str(random.random())+".html"
 #				with open(output_file,'wb') as file:
 #					write.file(res)
