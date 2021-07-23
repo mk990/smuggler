@@ -332,7 +332,7 @@ class Desyncr():
 			if "Content-Length: 11" in str(payload) or "Content-Length: 5" in str(payload):
 				smuggled=0
 			if res is not None :
-				print(str(smuggled),res[0:40],"LEN:"+str(len(res))+"\r\n\r\n")
+				print(str(smuggled),res[0:40],"LEN:"+str(len(res)))
 #				output_file="/var/www/html/"+self._host+"_"+str(self._port)+"/"+self._host+str(random.random())+".html"
 #				with open(output_file,'wb') as file:
 #					write.file(res)
@@ -444,7 +444,7 @@ class Desyncr():
 		for n in range(1,10):
 			attack_list.append(p)
 #			print(binascii.hexlify(str(p)))
-		os.system("mkdir /var/www/html/"+self._host+"_"+str(self._port))
+#		os.system("mkdir /var/www/html/"+self._host+"_"+str(self._port))
 		with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
 			future_to_smuggle={executor.submit(self.make_poc, req): req for req in attack_list}
 #			print(future_to_smuggle)
