@@ -51,6 +51,7 @@ def permutation():
 
 #permutation(render_template)
 mutations["vanilla"] = render_template("Transfer-Encoding: chunked")
+mutations["chunkedchunked"] = render_template("Transfer-Encoding chunked : chunked")
 mutations["spjunk"] = render_template("Transfer-Encoding x: chunked")
 mutations["connection"] = render_template("Connection: Transfer-Encoding\r\nTransfer-Encoding: chunked")
 mutations["nameprefix1"] = render_template(" Transfer-Encoding: chunked")
