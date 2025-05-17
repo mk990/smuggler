@@ -21,7 +21,7 @@ setup(
         'Topic :: Security',
         'Topic :: Internet :: WWW/HTTP'
     ],
-    packages=['configs','payloads'],  # Include configs as a package
+    packages=['configs','payloads','lib'],  # Include configs as a package
     entry_points={
         'console_scripts': [
             'smuggler = smuggler:main',
