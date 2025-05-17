@@ -21,6 +21,9 @@ setup(
         'Topic :: Security',
         'Topic :: Internet :: WWW/HTTP'
     ],
+    install_requires=[
+        'colorama',
+    ],
     packages=['configs','payloads','lib'],  # Include configs as a package
     entry_points={
         'console_scripts': [
